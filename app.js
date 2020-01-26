@@ -8,8 +8,7 @@ const Employee = require("./lib/employee.js");
 const Engineer = require("./lib/engineer.js");
 const Intern = require("./lib/intern.js");
 const Manager = require("./lib/Manager.js");
-const htmlString = require("./lib/htmlString.js");
-const team = htmlString;
+const Generate = require("./lib/generateHTML.js");
 
 const employeeArray = []
 const managerArray = [];
@@ -99,46 +98,57 @@ const internQues = [
     }
 ]
 
+const mainHTML = Generate.main();
+fs.writeFile("./templates/main.html", mainHTML, function (err) {
+    if (err) {
+        return console.log(err);
+    }
+}) 
+
 initiateQues();
 
 function initiateQues() {
     inquirer.prompt(roleQues)
-    .then((roleData) => {
-        if(roleData.teamRole === 'manager') {
-            // console.log('Manager Selected');
-            managerQuestions(managerQues, roleData);
-        }
-        else if(roleData.teamRole === 'engineer') {
-            // console.log('Engineer Selected');
-            engineerQuestions(engineerQues, roleData);
-        }
-        else if(roleData.teamRole === 'intern') {
-            // console.log('Intern Selected');
-            internQuestions(internQues, roleData);
-        }
-        else {
-            console.log('Done creating team');
-            console.log(employeeArray);
-            const inputArray = JSON.stringify(employeeArray);
-            console.log(inputArray);
-            console.log(employeeArray[0].employeeName);
-        }
-    })
+        .then((roleData) => {
+            if (roleData.teamRole === 'manager') {
+                // console.log('Manager Selected');
+                managerQuestions(managerQues, roleData);
+            }
+            else if (roleData.teamRole === 'engineer') {
+                // console.log('Engineer Selected');
+                engineerQuestions(engineerQues, roleData);
+            }
+            else if (roleData.teamRole === 'intern') {
+                // console.log('Intern Selected');
+                internQuestions(internQues, roleData);
+            }
+            else {
+                console.log('Done creating team');
+                console.log(managerArray);
+                console.log(engineerArray);
+                console.log(internArray);
+                // const inputArray = JSON.stringify(employeeArray);
+                // console.log(inputArray);
+                // console.log(employeeArray[0].employeeName);
+            }
+        })
 }
 
 function managerQuestions(ques, role) {
-    inquirer.prompt(ques)
+    return inquirer.prompt(ques)
     .then((data) => {
         console.log(data);
         console.log(role);
-        employeeArray.push(data);
-        console.log(employeeArray);
+        managerArray.push(data);
+        console.log(managerArray);
         const manager = new Manager(data.employeeName, data.employeeID, data.employeeEmail, data.officeNum);
         console.log(manager);
-        const managerHtml = JSON.stringify(manager);
+        console.log(manager.getName());
+        // const managerHtml = JSON.stringify(manager);
+        const managerHtml = Generate.manager(manager);
         console.log(managerHtml);
         // const managerHtml = `${data.employeeName, data.employeeID, data.employeeEmail, data.schoolName}`
-        fs.appendFile("manager.html", managerHtml, function (err) {
+        fs.appendFile("./templates/main.html", managerHtml, function (err) {
             if (err) {
                 return console.log(err);
             }
@@ -148,18 +158,19 @@ function managerQuestions(ques, role) {
 }
 
 function engineerQuestions(ques, role) {
-    inquirer.prompt(ques)
+    return inquirer.prompt(ques)
     .then((data) => {
         console.log(data);
         console.log(role);
-        employeeArray.push(data);
-        console.log(employeeArray);
+        engineerArray.push(data);
+        console.log(engineerArray);
         const engineer = new Engineer(data.employeeName, data.employeeID, data.employeeEmail, data.gitHub);
         console.log(engineer);
-        const engineerHtml = JSON.stringify(engineer);
+        // const engineerHtml = JSON.stringify(engineer);
+        const engineerHtml = Generate.engineer(engineer);
         console.log(engineerHtml);
         // const internHtml = `${data.employeeName, data.employeeID, data.employeeEmail, data.schoolName}`
-        fs.appendFile("engineer.html", engineerHtml, function (err) {
+        fs.appendFile("./templates/main.html", engineerHtml, function (err) {
             if (err) {
                 return console.log(err);
             }
@@ -169,18 +180,19 @@ function engineerQuestions(ques, role) {
 }
 
 function internQuestions(ques, role) {
-    inquirer.prompt(ques)
+    return inquirer.prompt(ques)
     .then((data) => {
         console.log(data);
         console.log(role);
-        employeeArray.push(data);
-        console.log(employeeArray);
+        internArray.push(data);
+        console.log(internArray);
         const intern = new Intern(data.employeeName, data.employeeID, data.employeeEmail, data.schoolName);
         console.log(intern);
-        const internHtml = JSON.stringify(intern);
+        // const internHtml = JSON.stringify(intern);
+        const internHtml = Generate.intern(intern);
         console.log(internHtml);
         // const internHtml = `${data.employeeName, data.employeeID, data.employeeEmail, data.schoolName}`
-        fs.appendFile("intern.html", internHtml, function (err) {
+        fs.appendFile("./templates/main.html", internHtml, function (err) {
             if (err) {
                 return console.log(err);
             }
