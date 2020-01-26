@@ -4,6 +4,7 @@ const inquirer = require('inquirer');
 // const generateHTML = require('./generateHTML.js');
 // const axios = require('axios');
 // const convertFactory = require('electron-html-to');
+const parse = require('node-html-parser').parse;
 const Employee = require("./lib/employee.js");
 const Engineer = require("./lib/engineer.js");
 const Intern = require("./lib/intern.js");
@@ -147,13 +148,24 @@ function managerQuestions(ques, role) {
         // const managerHtml = JSON.stringify(manager);
         const managerHtml = Generate.manager(manager);
         console.log(managerHtml);
-        // const managerHtml = `${data.employeeName, data.employeeID, data.employeeEmail, data.schoolName}`
-        fs.appendFile("./templates/main.html", managerHtml, function (err) {
-            if (err) {
-                return console.log(err);
+
+        fs.readFile('./templates/main.html', 'utf8', (err,html) =>{
+            if(err) {
+                throw err;
             }
-        })
-        initiateQues();
+            const root = parse(html);
+            const body = root.querySelector('#managerContent');
+            body.appendChild(managerHtml);
+
+            console.log(root.toString());
+            // const managerHtml = `${data.employeeName, data.employeeID, data.employeeEmail, data.schoolName}`
+            fs.writeFile("./templates/main.html", root.toString(), function (err) {
+                if (err) {
+                    return console.log(err);
+                }
+            });
+            initiateQues();
+        });
     })
 }
 
