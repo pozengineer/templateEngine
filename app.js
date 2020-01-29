@@ -1,5 +1,5 @@
 const fs = require('fs');
-// const open = require('open');
+const open = require('open');
 const inquirer = require('inquirer');
 // const generateHTML = require('./generateHTML.js');
 // const axios = require('axios');
@@ -110,29 +110,29 @@ initiateQues();
 
 function initiateQues() {
     inquirer.prompt(roleQues)
-        .then((roleData) => {
-            if (roleData.teamRole === 'manager') {
-                // console.log('Manager Selected');
-                managerQuestions(managerQues, roleData);
-            }
-            else if (roleData.teamRole === 'engineer') {
-                // console.log('Engineer Selected');
-                engineerQuestions(engineerQues, roleData);
-            }
-            else if (roleData.teamRole === 'intern') {
-                // console.log('Intern Selected');
-                internQuestions(internQues, roleData);
-            }
-            else {
-                console.log('Done creating team');
-                console.log(managerArray);
-                console.log(engineerArray);
-                console.log(internArray);
-                // const inputArray = JSON.stringify(employeeArray);
-                // console.log(inputArray);
-                // console.log(employeeArray[0].employeeName);
-            }
-        })
+    .then((roleData) => {
+        if (roleData.teamRole === 'manager') {
+            // console.log('Manager Selected');
+            managerQuestions(managerQues, roleData);
+        }
+        else if (roleData.teamRole === 'engineer') {
+            // console.log('Engineer Selected');
+            engineerQuestions(engineerQues, roleData);
+        }
+        else if (roleData.teamRole === 'intern') {
+            // console.log('Intern Selected');
+            internQuestions(internQues, roleData);
+        }
+        else {
+            console.log('Done creating team');
+            console.log(managerArray);
+            createManagerCard(managerArray);
+            console.log(internArray);
+            // const inputArray = JSON.stringify(employeeArray);
+            // console.log(inputArray);
+            // console.log(employeeArray[0].employeeName);
+        }
+    })
 }
 
 function managerQuestions(ques, role) {
@@ -140,33 +140,51 @@ function managerQuestions(ques, role) {
     .then((data) => {
         console.log(data);
         console.log(role);
+        // console.log(managerArray);
+        // const manager = new Manager(data.employeeName, data.employeeID, data.employeeEmail, data.officeNum);
         managerArray.push(data);
-        console.log(managerArray);
-        const manager = new Manager(data.employeeName, data.employeeID, data.employeeEmail, data.officeNum);
-        console.log(manager);
-        console.log(manager.getName());
-        // const managerHtml = JSON.stringify(manager);
-        const managerHtml = Generate.manager(manager);
-        console.log(managerHtml);
-
-        fs.readFile('./templates/main.html', 'utf8', (err,html) =>{
-            if(err) {
-                throw err;
-            }
-            const root = parse(html);
-            const body = root.querySelector('#managerContent');
-            body.appendChild(managerHtml);
-
-            console.log(root.toString());
-            // const managerHtml = `${data.employeeName, data.employeeID, data.employeeEmail, data.schoolName}`
-            fs.writeFile("./templates/main.html", root.toString(), function (err) {
-                if (err) {
-                    return console.log(err);
-                }
-            });
-            initiateQues();
-        });
+        // const managerHtml = Generate.manager(manager);
+        // console.log(managerHtml);
+        initiateQues();
     })
+}
+
+function createManagerCard(dataArray) {
+    const allManagerContent = [];
+    dataArray.forEach(data => {
+        console.log(data);
+        const newManager = new Manager(data.employeeName, data.employeeID, data.employeeEmail, data.officeNum);
+        // console.log(manager.getName());
+        // const managerHtml = JSON.stringify(manager);
+        const managerHtml = Generate.manager(newManager);
+        console.log(managerHtml);
+        allManagerContent.push(managerHtml);
+        // fs.appendFile("./templates/manager.html", managerHtml, function (err) {
+        //     if (err) {
+        //         return console.log(err);
+        //     }
+        // })
+    });
+    console.log(allManagerContent);
+    fs.readFile('./templates/main.html', 'utf8', (err,html) =>{
+        if(err) {
+            throw err;
+        }
+        const root = parse(html);
+        const body = root.querySelector('#managerContent');
+        allManagerContent.forEach(element => body.appendChild(element));
+        // body.appendChild(allManagerContent);
+
+        // console.log(root.toString());
+        // const managerHtml = `${data.employeeName, data.employeeID, data.employeeEmail, data.schoolName}`
+        fs.writeFile("./templates/main.html", root.toString(), function (err) {
+            if (err) {
+                return console.log(err);
+            }
+        });
+        console.log(engineerArray);
+        createEngineerCard(engineerArray);
+    });
 }
 
 function engineerQuestions(ques, role) {
@@ -174,21 +192,53 @@ function engineerQuestions(ques, role) {
     .then((data) => {
         console.log(data);
         console.log(role);
+        // console.log(managerArray);
+        // const manager = new Manager(data.employeeName, data.employeeID, data.employeeEmail, data.officeNum);
         engineerArray.push(data);
-        console.log(engineerArray);
-        const engineer = new Engineer(data.employeeName, data.employeeID, data.employeeEmail, data.gitHub);
-        console.log(engineer);
-        // const engineerHtml = JSON.stringify(engineer);
-        const engineerHtml = Generate.engineer(engineer);
+        // const managerHtml = Generate.manager(manager);
+        // console.log(managerHtml);
+        initiateQues();
+    })
+}
+
+function createEngineerCard(dataArray) {
+    const allEngineerContent = [];
+    dataArray.forEach(data => {
+        console.log(data);
+        const newEngineer = new Engineer(data.employeeName, data.employeeID, data.employeeEmail, data.officeNum);
+        // console.log(manager.getName());
+        // const managerHtml = JSON.stringify(manager);
+        const engineerHtml = Generate.engineer(newEngineer);
         console.log(engineerHtml);
-        // const internHtml = `${data.employeeName, data.employeeID, data.employeeEmail, data.schoolName}`
-        fs.appendFile("./templates/main.html", engineerHtml, function (err) {
+        allEngineerContent.push(engineerHtml);
+        // fs.appendFile("./templates/manager.html", managerHtml, function (err) {
+        //     if (err) {
+        //         return console.log(err);
+        //     }
+        // })
+    });
+    // allEngineerContent.join('');
+    console.log(allEngineerContent);
+    fs.readFile('./templates/main.html', 'utf8', (err,html) =>{
+        if(err) {
+            throw err;
+        }
+        const root = parse(html);
+        console.log(root.toString());
+        const body = root.querySelector('#managerContent');
+        allEngineerContent.forEach(element => body.appendChild(element));
+        // body.appendChild(allEngineerContent);
+
+        // console.log(root.toString());
+        // const managerHtml = `${data.employeeName, data.employeeID, data.employeeEmail, data.schoolName}`
+        fs.writeFile("./templates/main.html", root.toString(), function (err) {
             if (err) {
                 return console.log(err);
             }
-        })
-        initiateQues();
-    })
+        });
+        console.log(internArray);
+        createInternCard(internArray);
+    });
 }
 
 function internQuestions(ques, role) {
@@ -196,19 +246,52 @@ function internQuestions(ques, role) {
     .then((data) => {
         console.log(data);
         console.log(role);
+        // console.log(managerArray);
+        // const manager = new Manager(data.employeeName, data.employeeID, data.employeeEmail, data.officeNum);
         internArray.push(data);
-        console.log(internArray);
-        const intern = new Intern(data.employeeName, data.employeeID, data.employeeEmail, data.schoolName);
-        console.log(intern);
-        // const internHtml = JSON.stringify(intern);
-        const internHtml = Generate.intern(intern);
+        // const managerHtml = Generate.manager(manager);
+        // console.log(managerHtml);
+        initiateQues();
+    })
+}
+
+function createInternCard(dataArray) {
+    const allInternContent = [];
+    dataArray.forEach(data => {
+        console.log(data);
+        const newIntern = new Intern(data.employeeName, data.employeeID, data.employeeEmail, data.officeNum);
+        // console.log(manager.getName());
+        // const managerHtml = JSON.stringify(manager);
+        const internHtml = Generate.intern(newIntern);
         console.log(internHtml);
-        // const internHtml = `${data.employeeName, data.employeeID, data.employeeEmail, data.schoolName}`
-        fs.appendFile("./templates/main.html", internHtml, function (err) {
+        allInternContent.push(internHtml);
+        // fs.appendFile("./templates/manager.html", managerHtml, function (err) {
+        //     if (err) {
+        //         return console.log(err);
+        //     }
+        // })
+    });
+    // allInternContent.join('');
+    console.log(allInternContent);
+    fs.readFile('./templates/main.html', 'utf8', (err,html) =>{
+        if(err) {
+            throw err;
+        }
+        const root = parse(html);
+        console.log(root.toString());
+        const body = root.querySelector('#managerContent');
+        allInternContent.forEach(element => body.appendChild(element));
+        // body.appendChild(allInternContent);
+
+        // console.log(root.toString());
+        // const managerHtml = `${data.employeeName, data.employeeID, data.employeeEmail, data.schoolName}`
+        fs.writeFile("./templates/main.html", root.toString(), function (err) {
             if (err) {
                 return console.log(err);
             }
-        })
-        initiateQues();
-    })
+            else {
+                open(`./templates/main.html`);
+            }
+        });
+    });
 }
