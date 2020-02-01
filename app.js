@@ -1,6 +1,7 @@
 const fs = require('fs');
 const open = require('open');
 const inquirer = require('inquirer');
+// const joi = require('joi');
 // const generateHTML = require('./generateHTML.js');
 // const axios = require('axios');
 // const convertFactory = require('electron-html-to');
@@ -15,6 +16,76 @@ const employeeArray = []
 const managerArray = [];
 const engineerArray = [];
 const internArray = [];
+
+function validateName(name) {
+    const inputName = name;
+    // const nameRegex = /^(?=.*?\d)(?=.*?[a-zA-Z])[a-zA-Z\d]+$/
+    const nameRegex = /^(?=.*?[a-zA-Z])[a-zA-Z\s]+$/
+    const nameResult = nameRegex.test(inputName);
+    if (nameResult) {
+        return true;
+    }
+    else {
+        console.log(' Enter at least one alphabetic character!');
+    }
+}
+
+function validateNum(num) {
+    const inputNum = num;
+    const numRegex = /^(?=.*?[0-9])[0-9]+$/
+    const numResult = numRegex.test(inputNum);
+    if (numResult) {
+        return true;
+    }
+    else {
+        console.log(' Enter at least one numeric character!');
+    }
+}
+
+function validateEmail(email) {
+    const inputEmail = email;
+    // const emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,4})+$/
+    const emailRegex = /^\w+([\.-]?\w+)*@[a-z]+([\.-]?[a-z]+)*(\.[a-z]{2,4})+$/
+    const emailResult = emailRegex.test(inputEmail);
+    if (emailResult) {
+        return true;
+    }
+    else {
+        console.log(' Enter a valid email eg. pozengineer@hotmail.com');
+    }
+}
+
+function validateAlphaNum(alphaNum) {
+    const inputAlphaNum = alphaNum;
+    const alphaNumRegex = /^(?=.*?[a-zA-Z])[a-zA-Z0-9\s!@#$-_%&]+$/
+    const alphaNumResult = alphaNumRegex.test(inputAlphaNum);
+    if (alphaNumResult) {
+        return true;
+    }
+    else {
+        console.log(' Enter at least one alphabetic character!');
+    }
+}
+
+// function onValidation(err,val){
+//     if(err) {
+//         console.log(err.message);
+//         return err.message;         
+//     }
+//     else {
+//         return true;            
+//     }        
+// }
+
+// function validate(name) {
+//        var schema = joi.string().required();
+//        return joi.validate(name, schema, onValidation);
+// }
+
+// function validate(num) {
+//        var schema = joi.number().required().min(0).max(99);
+//        return joi.validate(num, schema , onValidation);
+// }
 
 const roleQues = [
     {
@@ -35,21 +106,25 @@ const managerQues = [
         type: 'input',
         message: 'What is your name?',
         name: 'employeeName',
+        validate: validateName
     },
     {
         type: 'input',
         message: 'What is your ID number?',
         name: 'employeeID',
+        validate: validateNum
     },
     {
         type: 'input',
         message: 'What is your email?',
         name: 'employeeEmail',
+        validate: validateEmail
     },
     {
         type: 'input',
         message: 'What is your office number?',
         name: 'officeNum',
+        validate: validateNum
     }
 ]
 
@@ -58,21 +133,25 @@ const engineerQues = [
         type: 'input',
         message: 'What is their name?',
         name: 'employeeName',
+        validate: validateName
     },
     {
         type: 'input',
         message: 'What is their ID number?',
         name: 'employeeID',
+        validate: validateNum
     },
     {
         type: 'input',
         message: 'What is their email?',
         name: 'employeeEmail',
+        validate: validateEmail
     },
     {
         type: 'input',
         message: 'What is their gitHub username?',
         name: 'gitHub',
+        validate: validateAlphaNum
     }
 ]
 
@@ -81,21 +160,25 @@ const internQues = [
         type: 'input',
         message: 'What is their name?',
         name: 'employeeName',
+        validate: validateName
     },
     {
         type: 'input',
         message: 'What is their ID number?',
         name: 'employeeID',
+        validate: validateNum
     },
     {
         type: 'input',
         message: 'What is their email?',
         name: 'employeeEmail',
+        validate: validateEmail
     },
     {
         type: 'input',
         message: 'What school are they attending?',
         name: 'schoolName',
+        validate: validateAlphaNum
     }
 ]
 
@@ -165,11 +248,15 @@ function createManagerCard(dataArray) {
         //     }
         // })
     });
+    // allManagerContent.join('');
     console.log(allManagerContent);
     fs.readFile('./templates/main.html', 'utf8', (err,html) =>{
         if(err) {
             throw err;
         }
+        // const testbody = html.toString();
+        // console.log("testbody: " + testbody);
+        // const body = hparse.parse(testbody, {style: true});
         const root = parse(html);
         const body = root.querySelector('#managerContent');
         allManagerContent.forEach(element => body.appendChild(element));
@@ -205,7 +292,7 @@ function createEngineerCard(dataArray) {
     const allEngineerContent = [];
     dataArray.forEach(data => {
         console.log(data);
-        const newEngineer = new Engineer(data.employeeName, data.employeeID, data.employeeEmail, data.officeNum);
+        const newEngineer = new Engineer(data.employeeName, data.employeeID, data.employeeEmail, data.gitHub);
         // console.log(manager.getName());
         // const managerHtml = JSON.stringify(manager);
         const engineerHtml = Generate.engineer(newEngineer);
@@ -225,7 +312,7 @@ function createEngineerCard(dataArray) {
         }
         const root = parse(html);
         console.log(root.toString());
-        const body = root.querySelector('#managerContent');
+        const body = root.querySelector('#engineerContent');
         allEngineerContent.forEach(element => body.appendChild(element));
         // body.appendChild(allEngineerContent);
 
@@ -259,7 +346,7 @@ function createInternCard(dataArray) {
     const allInternContent = [];
     dataArray.forEach(data => {
         console.log(data);
-        const newIntern = new Intern(data.employeeName, data.employeeID, data.employeeEmail, data.officeNum);
+        const newIntern = new Intern(data.employeeName, data.employeeID, data.employeeEmail, data.schoolName);
         // console.log(manager.getName());
         // const managerHtml = JSON.stringify(manager);
         const internHtml = Generate.intern(newIntern);
@@ -279,7 +366,7 @@ function createInternCard(dataArray) {
         }
         const root = parse(html);
         console.log(root.toString());
-        const body = root.querySelector('#managerContent');
+        const body = root.querySelector('#internContent');
         allInternContent.forEach(element => body.appendChild(element));
         // body.appendChild(allInternContent);
 

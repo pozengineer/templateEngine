@@ -21,18 +21,36 @@ html, body {
     margin-bottom: 0;
 }
 
+#managerContent {
+    background-color: #5852ff;
+    padding: 20px 0px;
+}
+
+#engineerContent {
+    background-color: #e803fc;
+}
+
+#internContent {
+    background-color: #03fc21;
+}
 .managerCard {
     margin: 0 auto;
-    margin-top: 20px;
+    margin-bottom: 20px;
+    padding: 0;
+    background-color: #333333;
 }
 
 .card {
-    float: none;
-    margin-bottom: 20px;
+    /* float: none; */
+    /* margin-bottom: 20px; */
     border: solid;
     /* border-style: solid; */
     border-width: 1px;
     border-color: #333333;
+}
+
+.card-body {
+    background-color: #ffffff;
 }
 
 .line {
@@ -42,8 +60,17 @@ html, body {
 
 .engineerCard,
 .internCard {
-    display: inline-block !important;
-    margin: 20px 30px;
+    /* display: inline-block !important; */
+    margin: 20px 20px;
+    background-color: #333333;
+    padding: 0;
+}
+
+.managerTitle {
+    border-bottom: solid;
+    border-width: 1px;
+    border-color: #333333;
+    background-color: #333333;
 }
 
 .lead {
@@ -114,9 +141,10 @@ html, body {
     padding: 0;
 }
 
-.fa {
-    margin-right: 5px;
-    font-size: 25px;
+.fas {
+    margin-right: 10px !important;
+    /* font-size: 25px; */
+    color: #ffffff;
 }
 
 a nav-link{
@@ -128,11 +156,11 @@ a nav-link{
 }
 
 a:link {
-    color: #ff0000;
+    color: #0a00ff;
 }
 
 a:hover {
-    color: #ffffff !important;
+    color: #ff0000 !important;
     text-decoration: none;
 }
 
@@ -165,8 +193,8 @@ a:focus {
     /* background-color: #efeee7; */
     background: #ffffff;
     margin: 0;
-    padding-top: 30px;
-    padding-bottom:100px;
+    /* padding-top: 30px; */
+    padding-bottom: 50px;
 }
 
 .container {
@@ -210,6 +238,25 @@ h3 {
     font-size: 28px;
 }
 
+h5 {
+    font-family: "Georgia", "Times New Roman", Times, serif;
+    color: #ffffff;
+    text-align: left;
+    padding: 10px 20px;
+    /* padding-bottom: 20px; */
+    font-size: 20px;
+    margin-bottom: 0;
+}
+
+h6 {
+    font-family: "Georgia", "Times New Roman", Times, serif;
+    color: #ffffff !important;
+    text-align: left;
+    padding: 0px 20px 10px 20px;
+    /* padding-bottom: 20px; */
+    font-size: 16px;
+}
+
 .inputTextArea {
     width: 100%;
     resize: none;
@@ -232,7 +279,7 @@ h3 {
 
 p {
     font-family: "Georgia", "Times New Roman", Times, serif;
-    font-size: 15px;
+    /* font-size: 15px; */
     line-height: 100%;
     color: #777777;
     margin-bottom: 10px;
@@ -248,7 +295,7 @@ hr {
 
 .wrapper {
     min-height: 100%;
-    margin-bottom: -50px;
+    /* margin-bottom: -50px; */
     background-color: #ffffff;
 }
 
@@ -274,8 +321,18 @@ hr {
     color: #ffffff !important;
 }
 
-.cardText {
+.card-text {
     color: #777777;
+    border: solid;
+    border-width: 1px;
+    border-color: #333333;
+    font-size: 16px;
+    padding: 5px;
+    margin: 0;
+}
+
+.card-link {
+    font-size: 16px;
 }
 
 .btn {
